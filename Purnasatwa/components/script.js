@@ -120,9 +120,13 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor=>{
 
 anchor.addEventListener("click",function(e){
 
+const target = this.getAttribute("href");
+
+if (target === "#") return;
+
 e.preventDefault();
 
-document.querySelector(this.getAttribute("href")).scrollIntoView({
+document.querySelector(target).scrollIntoView({
 
 behavior:"smooth"
 
@@ -144,11 +148,14 @@ const payPage = document.querySelector(".checkout-grid");
 
 if (payPage) {
 
-// ---------- Order Data (sync with cart.html) ----------
-const ORDER_ITEMS = [
-  { name: "A2 Cow Ghee", img: "img/pure ghee about.png", qty: 1, price: 899 },
-  { name: "Buffalo Ghee", img: "img/buffelo.png", qty: 2, price: 799 }
-];
+// ---------- Order Data (synced from the cart page) ----------
+const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+const ORDER_ITEMS = savedCart.length
+  ? savedCart.map(it => ({ name: it.name, img: it.image, qty: it.quantity, price: it.price }))
+  : [
+      { name: "A2 Cow Ghee", img: "img/pure ghee about.png", qty: 1, price: 899 },
+      { name: "Buffalo Ghee", img: "img/buffelo.png", qty: 2, price: 799 }
+    ];
 const DELIVERY_FREE_ABOVE = 999;
 const GST_RATE = 5;
 const SHIPPING = 0;
@@ -370,6 +377,9 @@ document.getElementById("payNowBtn").addEventListener("click", function () {
     orders.unshift({ ...order, date: order.date.toISOString(), eta: etaStr });
     localStorage.setItem("gd_orders", JSON.stringify(orders));
 
+    localStorage.removeItem("cart");
+    updateCartCount();
+
     btn.classList.remove("loading");
     btn.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Pay <span id="payAmt">' + INR(cart.total) + '</span> Securely';
   }, 1600);
@@ -454,37 +464,156 @@ if (loginForm) {
 }
 
 // ============================================================
-// CART  - Remove Item + Update Total
+// CART SYSTEM - Add To Cart + Cart Count Badge
 // ============================================================
 
-function removeCartItem(e, btn) {
-  e.preventDefault();
-  const card = btn.closest(".product-card");
-  if (card) {
-    card.style.opacity = "0";
-    card.style.transform = "scale(.92)";
-    setTimeout(() => {
-      card.remove();
-      updateCartTotal();
-    }, 250);
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+document.querySelectorAll(".add-cart").forEach(button => {
+  button.addEventListener("click", function (e) {
+    e.preventDefault();
+    const product = {
+      name: this.dataset.name,
+      price: Number(this.dataset.price),
+      image: this.dataset.image,
+      quantity: 1
+    };
+    const existing = cart.find(item => item.name === product.name);
+    if (existing) {
+      existing.quantity++;
+    } else {
+      cart.push(product);
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    showSuccessMessage();
+    updateCartCount();
+  });
+});
+
+function updateCartCount() {
+  const cartIcon = document.querySelector(".fa-cart-shopping");
+  if (!cartIcon) return;
+  const items = JSON.parse(localStorage.getItem("cart") || "[]");
+  const total = items.reduce((sum, item) => sum + item.quantity, 0);
+  let badge = document.querySelector(".cart-count");
+  if (!badge) {
+    badge = document.createElement("span");
+    badge.className = "cart-count";
+    cartIcon.parentElement.style.position = "relative";
+    cartIcon.parentElement.appendChild(badge);
   }
+  badge.textContent = total;
 }
 
-function updateCartTotal() {
-  const cartTotal = document.getElementById("cartTotal");
-  const checkoutWrap = document.getElementById("checkoutWrap");
-  const emptyMsg = document.getElementById("cartEmptyMsg");
-  if (!cartTotal) return;
+updateCartCount();
 
-  const remaining = document.querySelectorAll(".product-container .product-card");
-  const sum = Array.from(remaining).reduce((s, c) => {
-    const priceEl = c.querySelector(".price");
-    return s + (priceEl ? parseInt(priceEl.dataset.price || priceEl.textContent.replace(/[^\d]/g, ""), 10) : 0);
-  }, 0);
+// ============================================================
+// CART SYSTEM - Success Message Toast
+// ============================================================
 
-  cartTotal.textContent = "₹" + sum.toLocaleString("en-IN");
-  if (!remaining.length) {
-    if (checkoutWrap) checkoutWrap.style.display = "none";
-    if (emptyMsg) emptyMsg.style.display = "block";
-  }
+function showSuccessMessage() {
+  const oldMessage = document.querySelector(".cart-success");
+  if (oldMessage) oldMessage.remove();
+
+  const message = document.createElement("div");
+  message.className = "cart-success";
+  message.innerHTML = `
+    <i class="fa-solid fa-circle-check"></i>
+    Your Product Added To Cart Successfully
+  `;
+  document.body.appendChild(message);
+
+  setTimeout(() => message.classList.add("show-success"), 100);
+  setTimeout(() => {
+    message.classList.remove("show-success");
+    setTimeout(() => message.remove(), 500);
+  }, 2500);
 }
+
+// ============================================================
+// CART SYSTEM - Display Cart Products
+// ============================================================
+
+function displayCart() {
+  const cartContainer = document.getElementById("cart-container");
+  if (!cartContainer) return;
+
+  const items = JSON.parse(localStorage.getItem("cart") || "[]");
+  cartContainer.innerHTML = "";
+
+  if (items.length === 0) {
+    cartContainer.innerHTML = `
+      <div class="empty-cart">
+        🛒 Your Cart is Empty<br><br>
+        <a href="products.html" class="checkout-btn">Continue Shopping</a>
+      </div>
+    `;
+    const totalEl = document.getElementById("cart-total");
+    if (totalEl) totalEl.textContent = "₹0";
+    return;
+  }
+
+  items.forEach((item, index) => {
+    cartContainer.innerHTML += `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}">
+        <div>
+          <h3>${item.name}</h3>
+          <p class="cart-price">Price : ₹${item.price}</p>
+          <div class="qty-box">
+            <button class="qty-btn" onclick="decreaseQty(${index})">-</button>
+            <span class="qty-number">${item.quantity}</span>
+            <button class="qty-btn" onclick="increaseQty(${index})">+</button>
+          </div>
+          <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+        </div>
+      </div>
+    `;
+  });
+
+  updateTotal();
+}
+
+// ============================================================
+// CART SYSTEM - Quantity + Remove + Total
+// ============================================================
+
+function increaseQty(index) {
+  let items = JSON.parse(localStorage.getItem("cart") || "[]");
+  items[index].quantity++;
+  localStorage.setItem("cart", JSON.stringify(items));
+  cart = items;
+  displayCart();
+  updateCartCount();
+}
+
+function decreaseQty(index) {
+  let items = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (items[index].quantity > 1) {
+    items[index].quantity--;
+  } else {
+    items.splice(index, 1);
+  }
+  localStorage.setItem("cart", JSON.stringify(items));
+  cart = items;
+  displayCart();
+  updateCartCount();
+}
+
+function removeItem(index) {
+  let items = JSON.parse(localStorage.getItem("cart") || "[]");
+  items.splice(index, 1);
+  localStorage.setItem("cart", JSON.stringify(items));
+  cart = items;
+  displayCart();
+  updateCartCount();
+}
+
+function updateTotal() {
+  const items = JSON.parse(localStorage.getItem("cart") || "[]");
+  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const totalElement = document.getElementById("cart-total");
+  if (totalElement) totalElement.textContent = "₹" + total.toLocaleString("en-IN");
+}
+
+displayCart();

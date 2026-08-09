@@ -60,77 +60,23 @@ Login
 
 <section class="products">
 
-<h2>Shopping Cart</h2>
+<h2>Your Shopping Cart</h2>
 
-<div class="product-container">
+<div id="cart-container" class="cart-container"></div>
 
-<div class="product-card">
+<div class="cart-total">
 
-<img src="img/pure ghee about.png">
-
-<div class="product-content">
-
-<h3>A2 Cow Ghee</h3>
-
-<p>Quantity : 1</p>
-
-<h4 class="price" data-price="899">₹899</h4>
-
-<a href="#" class="buy-btn remove-btn" onclick="removeCartItem(event,this)">
-
-Remove
-
-</a>
-
-</div>
-
-</div>
-
-<div class="product-card">
-
-<img src="img/buffelo.png">
-
-<div class="product-content">
-
-<h3>Buffalo Ghee</h3>
-
-<p>Quantity : 2</p>
-
-<h4 class="price" data-price="1598">₹1598</h4>
-
-<a href="#" class="buy-btn remove-btn" onclick="removeCartItem(event,this)">
-
-Remove
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="checkoutWrap" style="text-align:center;margin-top:40px;">
-
-<h2>Total : <span id="cartTotal">₹2497</span></h2>
+<h2>Total : ₹<span id="cart-total">0</span></h2>
 
 <br>
 
-<a href="payment.html" class="btn">
+<a href="payment.html" class="checkout-btn">
 
-Proceed To Checkout
+<i class="fa-solid fa-lock"></i> Proceed To Checkout
 
 </a>
 
 </div>
-
-<p id="cartEmptyMsg" style="display:none;text-align:center;padding:40px 0;color:#888;font-size:16px;">
-
-<i class="fa-solid fa-cart-plus"></i> &nbsp;Your cart is empty.
-
-<a href="products.html" style="color:#124734;font-weight:700;text-decoration:underline;">Continue shopping</a>
-
-</p>
 
 </section>
 
