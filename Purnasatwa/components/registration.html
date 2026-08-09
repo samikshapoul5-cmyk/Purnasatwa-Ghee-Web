@@ -8,7 +8,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Login | Gaushree Dairy</title>
+<title>Register | Purnasatva</title>
 
 <link rel="stylesheet" href="style.css">
 
@@ -28,7 +28,7 @@
 
 <div class="logo">
 
-<h2>GAUSHREE</h2>
+<h2>PURNASATVA</h2>
 
 </div>
 
@@ -62,27 +62,33 @@ Login
 
 <div class="contact-info">
 
-<h2>Welcome Back</h2>
+<h2>Create Account</h2>
 
 <p>
 
-Login to your Gaushree Dairy account to manage orders, wishlist and profile.
+Join Purnasatva to shop faster, track orders and enjoy exclusive offers on pure dairy products.
 
 </p>
 
-<img src="img/gheeeeeeee.png" alt="Login" width="100%">
+<img src="img/gheeeeeeee.png" alt="Register" width="100%">
 
 </div>
 
-<form class="contact-form">
+<form class="contact-form" id="regForm" onsubmit="return handleRegister(event)">
 
-<input type="email" placeholder="Email Address" required>
+<input type="text" id="regName" placeholder="Full Name" required>
 
-<input type="password" placeholder="Password" required>
+<input type="email" id="regEmail" placeholder="Email Address" required>
 
-<button type="submit">
+<input type="tel" id="regPhone" placeholder="Phone Number" maxlength="10" required>
 
-Login
+<input type="password" id="regPass" placeholder="Password (min 6 characters)" minlength="6" required>
+
+<input type="password" id="regConfirm" placeholder="Confirm Password" required>
+
+<button type="submit" id="regBtn">
+
+Register
 
 </button>
 
@@ -90,9 +96,9 @@ Login
 
 <p style="text-align:center;">
 
-Don't have an account?
+Already have an account?
 
-<a href="#">Register</a>
+<a href="login.html">Login</a>
 
 </p>
 
@@ -106,7 +112,7 @@ Don't have an account?
 
 <div>
 
-<h3>Gaushree Dairy</h3>
+<h3>Purnasatva</h3>
 
 <p>100% Pure Dairy Products.</p>
 
@@ -132,7 +138,7 @@ Don't have an account?
 
 <p>+91 9876543210</p>
 
-<p>info@gaushree.com</p>
+<p>info@purnasatva.com</p>
 
 </div>
 
@@ -140,7 +146,7 @@ Don't have an account?
 
 <div class="footer-bottom">
 
-<p>© 2026 Gaushree Dairy. All Rights Reserved.</p>
+<p>© 2026 Purnasatva. All Rights Reserved.</p>
 
 </div>
 

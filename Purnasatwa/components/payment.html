@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Secure Checkout | Purnasatva</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div class="top-header">
+<p>🚚 Free Shipping On Orders Above ₹999 | 🔒 100% Secure Payments</p>
+</div>
+
+<header>
+<div class="logo">
+<h2>PURNASATVA</h2>
+</div>
+<nav>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="about.html">About</a></li>
+<li><a href="products.html">Products</a></li>
+<li><a href="contact.html">Contact</a></li>
+<li><a href="cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
+</ul>
+</nav>
+<a href="login.html" class="login-btn">Login</a>
+</header>
+
+<section class="pay-section">
+<h2 class="pay-title"><i class="fa-solid fa-lock"></i> Secure Checkout</h2>
+
+<div class="checkout-grid">
+
+<!-- LEFT : DETAILS + PAYMENT -->
+<div class="checkout-left">
+
+<div class="pay-box">
+<h3><i class="fa-solid fa-location-dot"></i> Delivery Details</h3>
+<div class="form-row">
+<input type="text" id="cName" placeholder="Full Name *" class="pay-input">
+<input type="tel" id="cPhone" placeholder="Phone Number *" class="pay-input" maxlength="10">
+</div>
+<input type="email" id="cEmail" placeholder="Email Address *" class="pay-input">
+<input type="text" id="cAddress" placeholder="House No, Street, Area *" class="pay-input">
+<div class="form-row">
+<input type="text" id="cCity" placeholder="City *" class="pay-input">
+<input type="text" id="cPin" placeholder="PIN Code *" class="pay-input" maxlength="6">
+</div>
+</div>
+
+<div class="pay-box">
+<h3><i class="fa-solid fa-wallet"></i> Payment Method</h3>
+
+<div class="pay-tabs">
+<button class="pay-tab active" data-tab="upi"><i class="fa-solid fa-qrcode"></i> UPI</button>
+<button class="pay-tab" data-tab="card"><i class="fa-regular fa-credit-card"></i> Card</button>
+<button class="pay-tab" data-tab="bank"><i class="fa-solid fa-building-columns"></i> Net Banking</button>
+<button class="pay-tab" data-tab="wallet"><i class="fa-solid fa-mobile-screen"></i> Wallet</button>
+<button class="pay-tab" data-tab="cod"><i class="fa-solid fa-hand-holding-dollar"></i> COD</button>
+</div>
+
+<div class="pay-panel active" id="panel-upi">
+<p class="panel-hint"><i class="fa-solid fa-circle-info"></i> Pay instantly using any UPI app</p>
+<div class="upi-apps">
+<button class="upi-app" data-upi="Paytm"><img src="https://cdn-icons-png.flaticon.com/512/1969/1969650.png" alt=""><span>Paytm</span></button>
+<button class="upi-app" data-upi="PhonePe"><img src="https://cdn-icons-png.flaticon.com/512/825/825454.png" alt=""><span>PhonePe</span></button>
+<button class="upi-app" data-upi="Google Pay"><img src="https://cdn-icons-png.flaticon.com/512/281/281764.png" alt=""><span>Google Pay</span></button>
+</div>
+<input type="text" id="upiId" placeholder="Enter UPI ID (e.g. name@upi)" class="pay-input">
+</div>
+
+<div class="pay-panel" id="panel-card">
+<div class="card-preview" id="cardPreview">
+<div class="cp-top"><span class="cp-chip"></span><span><i class="fa-brands fa-cc-visa"></i></span></div>
+<div class="cp-num" id="cpNum">•••• •••• •••• ••••</div>
+<div class="cp-bottom"><span id="cpName">CARD HOLDER NAME</span><span id="cpExp">MM/YY</span></div>
+</div>
+<input type="text" id="cardNum" placeholder="Card Number *" class="pay-input" maxlength="19">
+<input type="text" id="cardName" placeholder="Name on Card *" class="pay-input">
+<div class="form-row">
+<input type="text" id="cardExp" placeholder="MM/YY *" class="pay-input" maxlength="5">
+<input type="password" id="cardCvv" placeholder="CVV *" class="pay-input" maxlength="3">
+</div>
+</div>
+
+<div class="pay-panel" id="panel-bank">
+<p class="panel-hint"><i class="fa-solid fa-circle-info"></i> You will be redirected to your bank</p>
+<select id="bankSelect" class="pay-input">
+<option value="">Select Your Bank *</option>
+<option>State Bank of India</option>
+<option>HDFC Bank</option>
+<option>ICICI Bank</option>
+<option>Axis Bank</option>
+<option>Punjab National Bank</option>
+<option>Bank of Baroda</option>
+</select>
+</div>
+
+<div class="pay-panel" id="panel-wallet">
+<p class="panel-hint"><i class="fa-solid fa-circle-info"></i> Pay from your digital wallet</p>
+<div class="upi-apps">
+<button class="upi-app" data-upi="Paytm Wallet"><img src="https://cdn-icons-png.flaticon.com/512/1969/1969650.png" alt=""><span>Paytm</span></button>
+<button class="upi-app" data-upi="Amazon Pay"><img src="https://cdn-icons-png.flaticon.com/512/598/598918.png" alt=""><span>Amazon Pay</span></button>
+<button class="upi-app" data-upi="Mobikwik"><img src="https://cdn-icons-png.flaticon.com/512/5968/5968298.png" alt=""><span>MobiKwik</span></button>
+</div>
+</div>
+
+<div class="pay-panel" id="panel-cod">
+<div class="cod-box">
+<i class="fa-solid fa-hand-holding-dollar"></i>
+<h4>Cash on Delivery</h4>
+<p>Pay ₹<span id="codAmt">0</span> in cash when your order arrives.<br>Cash, UPI or Card accepted at your doorstep.</p>
+</div>
+</div>
+</div>
+
+<button class="pay-now-btn" id="payNowBtn"><i class="fa-solid fa-shield-halved"></i> Pay <span id="payAmt">₹0</span> Securely</button>
+<p class="secure-note"><i class="fa-solid fa-lock"></i> 256-bit SSL encrypted payment. Demo page — no real money is charged.</p>
+</div>
+
+<!-- RIGHT : ORDER SUMMARY -->
+<div class="checkout-right">
+<div class="summary-box">
+<h3><i class="fa-solid fa-receipt"></i> Order Summary</h3>
+<div class="summary-items" id="summaryItems"></div>
+<div class="summary-lines">
+<div class="sum-line"><span>Subtotal</span><span id="sSubtotal">₹0</span></div>
+<div class="sum-line"><span>Delivery Charges</span><span id="sDelivery" class="free-tag">FREE</span></div>
+<div class="sum-line"><span>GST (5%)</span><span id="sGst">₹0</span></div>
+<div class="sum-line total"><span>Total Payable</span><span id="sTotal">₹0</span></div>
+</div>
+<p class="est-delivery"><i class="fa-solid fa-truck-fast"></i> Expected delivery in <b>3-5 days</b></p>
+</div>
+</div>
+
+</div>
+</section>
+
+<footer>
+<div class="footer-content">
+<div>
+<h3>Purnasatva</h3>
+<p>100% Pure Dairy Products.</p>
+</div>
+<div>
+<h3>Quick Links</h3>
+<a href="index.html">Home</a>
+<a href="about.html">About</a>
+<a href="products.html">Products</a>
+<a href="contact.html">Contact</a>
+</div>
+<div>
+<h3>Contact</h3>
+<p>+91 9876543210</p>
+<p>info@PURNASATVA.com</p>
+</div>
+</div>
+<div class="footer-bottom">
+<p>© 2026 Purnasatva. All Rights Reserved.</p>
+</div>
+</footer>
+
+<!-- SUCCESS OVERLAY -->
+<div class="overlay" id="successOverlay">
+<div class="success-card">
+<i class="fa-solid fa-circle-check success-icon"></i>
+<h2>Order Confirmed! 🎉</h2>
+<p>Thank you for shopping with Purnasatva</p>
+<div class="success-info">
+<p>Order ID : <b id="okOrderId">—</b></p>
+<p>Payment : <b id="okPayMethod">—</b></p>
+<p>Amount : <b id="okAmount">—</b></p>
+<p>Expected Delivery : <b id="okEta">—</b></p>
+</div>
+<div class="success-actions">
+<button class="btn" id="viewInvoiceBtn"><i class="fa-solid fa-file-invoice"></i> View Bill / Invoice</button>
+<button class="btn gold-btn" id="continueBtn">Continue Shopping</button>
+</div>
+</div>
+</div>
+
+<!-- INVOICE MODAL -->
+<div class="overlay" id="invoiceOverlay">
+<div class="invoice-modal">
+<div class="invoice-actions">
+<button class="btn" id="printBtn"><i class="fa-solid fa-print"></i> Print / Save PDF</button>
+<button class="close-x" id="closeInvoice"><i class="fa-solid fa-xmark"></i></button>
+</div>
+<div class="invoice" id="invoiceBody"></div>
+</div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

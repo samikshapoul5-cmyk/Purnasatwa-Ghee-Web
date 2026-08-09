@@ -1,4 +1,4 @@
-
+ 
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
@@ -1412,4 +1412,107 @@ nav ul li a{
 
 nav ul li a:hover{
     transform:translateY(-5px) scale(1.05);
+}
+
+
+/* ============================================================
+   PAYMENT / CHECKOUT PAGE  (added by opencode)
+   ============================================================ */
+.pay-section{width:92%;max-width:1250px;margin:110px auto 60px}
+.pay-title{text-align:center;font-size:32px;color:#124734;margin-bottom:40px}
+.checkout-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:30px;align-items:start}
+.pay-box{background:#fff;border:1px solid #ececec;border-radius:14px;padding:24px;margin-bottom:22px;box-shadow:0 6px 24px rgba(18,71,52,.05)}
+.pay-box h3{color:#124734;margin-bottom:18px;font-size:19px;display:flex;align-items:center;gap:10px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pay-input{width:100%;padding:13px 16px;border:1.5px solid #e3e3e3;border-radius:8px;font-size:14px;font-family:inherit;margin-bottom:14px;transition:.3s;background:#fafaf8;box-sizing:border-box}
+.pay-input:focus{outline:none;border-color:#124734;background:#fff;box-shadow:0 0 0 3px rgba(18,71,52,.08)}
+.pay-input::placeholder{color:#9aa}
+.pay-tabs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}
+.pay-tab{padding:12px 6px;border:1.5px solid #e6e6e6;border-radius:8px;background:#fff;color:#555;font-size:12px;font-weight:600;cursor:pointer;transition:.25s;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:5px}
+.pay-tab i{font-size:18px}
+.pay-tab:hover{border-color:#124734;color:#124734}
+.pay-tab.active{background:#124734;border-color:#124734;color:#fff}
+.pay-panel{display:none}
+.pay-panel.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.panel-hint{font-size:13px;color:#777;margin-bottom:14px}
+.upi-apps{display:flex;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.upi-app{display:flex;align-items:center;gap:8px;padding:10px 18px;border:1.5px solid #e6e6e6;border-radius:10px;background:#fff;cursor:pointer;font-family:inherit;font-size:13px;font-weight:600;color:#333;transition:.25s}
+.upi-app img{width:24px;height:24px;object-fit:contain}
+.upi-app:hover{border-color:#124734}
+.upi-app.selected{background:#124734;border-color:#124734;color:#fff}
+.card-preview{background:linear-gradient(135deg,#124734,#1d6b4b);color:#fff;border-radius:14px;padding:20px;margin-bottom:16px;min-height:150px;display:flex;flex-direction:column;justify-content:space-between;box-shadow:0 14px 30px rgba(18,71,52,.25)}
+.cp-top{display:flex;justify-content:space-between;align-items:center}
+.cp-chip{width:38px;height:28px;background:linear-gradient(135deg,#b88a44,#d8a84f);border-radius:5px;display:inline-block}
+.cp-top i{font-size:28px}
+.cp-num{font-size:20px;letter-spacing:3px;font-family:monospace}
+.cp-bottom{display:flex;justify-content:space-between;font-size:12px;letter-spacing:1px;text-transform:uppercase}
+.cod-box{text-align:center;padding:20px 10px;background:#f6faf7;border:1px dashed #b8d4c3;border-radius:12px}
+.cod-box i{font-size:38px;color:#124734;margin-bottom:10px}
+.cod-box h4{color:#124734;font-size:18px;margin-bottom:6px}
+.cod-box p{color:#666;font-size:13.5px}
+.pay-now-btn{width:100%;padding:16px;background:linear-gradient(135deg,#b88a44,#d8a84f);color:#fff;border:none;border-radius:10px;font-size:17px;font-weight:800;cursor:pointer;transition:.3s;font-family:inherit;box-shadow:0 12px 30px rgba(184,138,68,.30)}
+.pay-now-btn:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(184,138,68,.40)}
+.pay-now-btn.loading{pointer-events:none;opacity:.7}
+.secure-note{text-align:center;font-size:12.5px;color:#888;margin-top:14px}
+.secure-note i{color:#124734}
+.summary-box{background:#fff;border:1px solid #ececec;border-radius:14px;padding:24px;box-shadow:0 6px 14px rgba(0,0,0,.05);position:sticky;top:100px}
+.summary-box h3{color:#124734;margin-bottom:18px;display:flex;align-items:center;gap:10px}
+.summary-items{border-bottom:1px dashed #ddd;margin-bottom:14px}
+.sum-item{display:flex;align-items:center;gap:12px;padding:10px 0}
+.sum-item img{width:52px;height:52px;object-fit:cover;border-radius:8px;background:#f5f5f0}
+.sum-item-info{flex:1}
+.sum-item-info h4{font-size:14px;color:#333}
+.sum-item-info p{font-size:12px;color:#888}
+.sum-item .sum-price{font-weight:800;color:#124734}
+.summary-lines .sum-line{display:flex;justify-content:space-between;padding:8px 0;font-size:14.5px;color:#555}
+.sum-line.free-tag{color:#124734;font-weight:800}
+.sum-line.total{font-size:19px;font-weight:900;color:#124734;border-top:2px solid #124734;margin-top:8px;padding-top:14px}
+.est-delivery{margin-top:16px;background:#f4faf6;border:1px dashed #b8d4c3;border-radius:10px;padding:12px;font-size:13px;color:#555;text-align:center}
+/* ---------- SUCCESS + INVOICE ---------- */
+.overlay{position:fixed;inset:0;background:rgba(10,30,22,.72);display:none;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.overlay.show{display:flex;animation:fadeIn .25s ease}
+.success-card{background:#fff;border-radius:18px;padding:40px 34px;max-width:460px;width:100%;text-align:center;box-shadow:0 30px 60px rgba(0,0,0,.35)}
+.success-icon{font-size:64px;color:#27ae60;margin-bottom:12px}
+.success-card h2{color:#124734;font-size:26px;margin-bottom:6px}
+.success-card>p{color:#777;margin-bottom:20px}
+.success-info{background:#f6faf7;border-radius:10px;padding:16px;text-align:left;margin-bottom:22px}
+.success-info p{display:flex;justify-content:space-between;padding:4px 0;font-size:14px;color:#555}
+.success-info b{color:#124734}
+.success-actions{display:flex;gap:12px;justify-content:center}
+.gold-btn{background:linear-gradient(135deg,#b88a44,#d8a84f)}
+.invoice-modal{background:#fff;border-radius:16px;max-width:720px;width:100%;max-height:90vh;overflow:auto}
+.invoice-actions{display:flex;justify-content:space-between;align-items:center;padding:16px 22px;border-bottom:1px solid #eee;position:sticky;top:0;background:#fff}
+.close-x{border:none;background:#eee;width:38px;height:38px;border-radius:50%;cursor:pointer;font-size:16px}
+.close-x:hover{background:#124734;color:#fff}
+.invoice{padding:8px 34px 30px;color:#222}
+.inv-head{display:flex;justify-content:space-between;align-items:center;border-bottom:2px solid #124734;padding-bottom:16px;margin-bottom:14px}
+.inv-head h2{color:#124734;font-size:26px;letter-spacing:1px}
+.inv-company{text-align:right;font-size:12.5px;color:#555;line-height:1.6}
+.inv-meta{display:flex;justify-content:space-between;font-size:13.5px;color:#555;margin-bottom:16px}
+.inv-meta b{color:#222}
+.inv-table{width:100%;border-collapse:collapse;margin:8px 0 16px;font-size:13.5px}
+.inv-table th{background:#124734;color:#fff;padding:10px;text-align:left}
+.inv-table td{padding:10px;border-bottom:1px solid #eee}
+.inv-table td.a{text-align:right}
+.inv-total-rows{margin-left:auto;width:300px;font-size:14px;color:#444}
+.inv-total-rows div{display:flex;justify-content:space-between;padding:4px 0}
+.inv-total-rows .inv-grand{font-size:18px;font-weight:900;color:#124734;border-top:2px solid #124734;margin-top:6px;padding-top:10px}
+.inv-pay{margin-top:18px;padding:10px 14px;background:#f6faf7;border-radius:8px;font-size:13.5px;color:#333;border:1px dashed #bccdc3}
+.inv-pay b{color:#124734}
+.inv-foot{margin-top:18px;padding-top:14px;border-top:1px solid #eee;text-align:center;font-size:12.5px;color:#777;line-height:1.8}
+.inv-note{font-size:11.5px;color:#999;text-align:center;margin-top:10px}
+/* ---------- Print : only invoice ---------- */
+@media print{
+  body *{visibility:hidden!important}
+  #invoiceBody,#invoiceBody *{visibility:visible!important}
+  #invoiceBody{position:absolute;left:0;top:0;width:100%}
+  .invoice-actions,.close-x{display:none!important}
+  .invoice-modal{max-height:none;overflow:visible;box-shadow:none}
+}
+@media(max-width:900px){
+  .checkout-grid{grid-template-columns:1fr}
+  .summary-box{position:static}
+  .pay-tabs{grid-template-columns:repeat(2,1fr)}
+  .form-row{grid-template-columns:1fr}
 }
