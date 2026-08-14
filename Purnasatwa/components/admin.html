@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Purnasatwa</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+</head>
+<body class="admin-body">
+
+<!-- Admin Login Screen -->
+
+<div class="admin-login" id="adminLogin">
+
+    <div class="admin-login-card">
+
+        <div class="logo">
+            <h2>PURNASATWA</h2>
+        </div>
+
+        <h3><i class="fa-solid fa-user-shield"></i> Admin Login</h3>
+
+        <p>Enter admin credentials to manage the store.</p>
+
+        <form class="contact-form" id="adminLoginForm">
+
+            <input type="text" id="adminUser" placeholder="Admin Username" required>
+
+            <input type="password" id="adminPass" placeholder="Admin Password" required>
+
+            <button type="submit">Login</button>
+
+        </form>
+
+        <p style="text-align:center;font-size:13px;color:#999;">
+            Default: admin / admin123
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Admin Dashboard -->
+
+<div class="admin-dash" id="adminDash" style="display:none;">
+
+    <header class="admin-header">
+
+        <div class="logo">
+            <h2>PURNASATWA</h2>
+        </div>
+
+        <nav>
+            <ul>
+                <li><a href="index.html">View Store</a></li>
+                <li><a href="admin.html">Dashboard</a></li>
+            </ul>
+        </nav>
+
+        <a href="#" class="login-btn" id="adminLogoutBtn">Logout</a>
+
+    </header>
+
+    <section class="admin-section">
+
+        <h2><i class="fa-solid fa-gauge-high"></i> Admin Dashboard</h2>
+
+        <div class="admin-stats" id="adminStats">
+
+            <div class="stat-card"><i class="fa-solid fa-box"></i><h3 id="statProducts">0</h3><p>Products</p></div>
+
+            <div class="stat-card"><i class="fa-solid fa-receipt"></i><h3 id="statOrders">0</h3><p>Orders</p></div>
+
+            <div class="stat-card"><i class="fa-solid fa-users"></i><h3 id="statUsers">0</h3><p>Users</p></div>
+
+            <div class="stat-card"><i class="fa-solid fa-envelope"></i><h3 id="statMessages">0</h3><p>Messages</p></div>
+
+            <div class="stat-card"><i class="fa-solid fa-star"></i><h3 id="statReviews">0</h3><p>Reviews</p></div>
+
+        </div>
+
+        <div class="admin-tabs">
+
+            <button class="admin-tab active" data-tab="orders"><i class="fa-solid fa-receipt"></i> Orders</button>
+
+            <button class="admin-tab" data-tab="products"><i class="fa-solid fa-box"></i> Products</button>
+
+            <button class="admin-tab" data-tab="users"><i class="fa-solid fa-users"></i> Users</button>
+
+            <button class="admin-tab" data-tab="messages"><i class="fa-solid fa-envelope"></i> Messages</button>
+
+            <button class="admin-tab" data-tab="reviews"><i class="fa-solid fa-star"></i> Reviews</button>
+
+        </div>
+
+        <!-- Orders -->
+
+        <div class="admin-panel active" id="panel-orders">
+
+            <h3>Orders</h3>
+
+            <div class="admin-table-wrap">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Items</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="adminOrdersBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Products -->
+
+        <div class="admin-panel" id="panel-products">
+
+            <h3>Products</h3>
+
+            <form class="contact-form admin-product-form" id="productForm">
+
+                <input type="hidden" id="pIndex">
+
+                <input type="text" id="pName" placeholder="Product Name" required>
+
+                <input type="number" id="pPrice" placeholder="Price (₹)" min="1" required>
+
+                <input type="text" id="pUnit" placeholder="Unit (optional: /kg, /Litre)">
+
+                <input type="text" id="pDesc" placeholder="Short Description">
+
+                <input type="text" id="pImage" placeholder="Or enter image path (e.g. img/butter.png)">
+
+                <label class="admin-file-label" for="pImageFile">
+                    <i class="fa-solid fa-upload"></i> Upload Product Image
+                </label>
+
+                <input type="file" id="pImageFile" accept="image/*" style="display:none;">
+
+                <img id="pImagePreview" alt="Preview" class="admin-img-preview" style="display:none;">
+
+                <button type="submit" id="productFormBtn">Add Product</button>
+
+                <button type="button" class="btn2" id="productCancelBtn" style="display:none;">Cancel Edit</button>
+
+            </form>
+
+            <div class="admin-table-wrap">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="adminProductsBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Users -->
+
+        <div class="admin-panel" id="panel-users">
+
+            <h3>Registered Users</h3>
+
+            <div class="admin-table-wrap">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Joined</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="adminUsersBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Messages -->
+
+        <div class="admin-panel" id="panel-messages">
+
+            <h3>Contact Messages</h3>
+
+            <div class="admin-table-wrap">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Subject</th>
+                            <th>Message</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="adminMessagesBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+        <!-- Reviews -->
+
+        <div class="admin-panel" id="panel-reviews">
+
+            <h3>Customer Reviews</h3>
+
+            <div class="admin-table-wrap">
+
+                <table class="admin-table">
+
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Rating</th>
+                            <th>Review</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="adminReviewsBody"></tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+    </section>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

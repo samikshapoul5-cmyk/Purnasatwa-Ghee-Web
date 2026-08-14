@@ -106,6 +106,15 @@ form.addEventListener("submit",function(e){
 
 e.preventDefault();
 
+const name = form.querySelector("input[placeholder='Your Name']").value.trim();
+const email = form.querySelector("input[placeholder='Your Email']").value.trim();
+const subject = form.querySelector("input[placeholder='Subject']").value.trim();
+const message = form.querySelector("textarea").value.trim();
+
+const messages = JSON.parse(localStorage.getItem("ps_messages") || "[]");
+messages.unshift({ name, email, subject, message, date: new Date().toISOString() });
+localStorage.setItem("ps_messages", JSON.stringify(messages));
+
 alert("Your message has been sent successfully!");
 
 form.reset();
@@ -136,9 +145,38 @@ behavior:"smooth"
 
 });
 
-console.log("PURNASATVA Website Loaded Successfully");
+console.log("PURNASATWA Website Loaded Successfully");
 
 
+
+// ============================================================
+// CHECKOUT PAGE - collect delivery details, go to payment
+// ============================================================
+
+const checkoutForm = document.getElementById("checkoutForm");
+
+if (checkoutForm) {
+
+  checkoutForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.getElementById("coName").value.trim();
+    const phone = document.getElementById("coPhone").value.trim();
+    const address = document.getElementById("coAddress").value.trim();
+    const city = document.getElementById("coCity").value.trim();
+    const pin = document.getElementById("coPin").value.trim();
+
+    if (name.length < 3) { alert("Please enter your full name"); return; }
+    if (!/^[6-9]\d{9}$/.test(phone)) { alert("Please enter a valid 10-digit mobile number"); return; }
+    if (address.length < 8) { alert("Please enter your complete delivery address"); return; }
+    if (city.length < 2) { alert("Please enter your city"); return; }
+    if (!/^\d{6}$/.test(pin)) { alert("Please enter a valid 6-digit PIN code"); return; }
+
+    localStorage.setItem("ps_delivery", JSON.stringify({ name, phone, address, city, pin }));
+    location.href = "payment.html";
+  });
+
+}
 
 // ============================================================
 // PAYMENT PAGE  (added by opencode)
@@ -147,6 +185,21 @@ console.log("PURNASATVA Website Loaded Successfully");
 const payPage = document.querySelector(".checkout-grid");
 
 if (payPage) {
+
+// ---------- Pre-fill delivery details from checkout page ----------
+const savedDelivery = JSON.parse(localStorage.getItem("ps_delivery") || "null");
+if (savedDelivery) {
+  const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+  set("cName", savedDelivery.name);
+  set("cPhone", savedDelivery.phone);
+  set("cAddress", savedDelivery.address);
+  set("cCity", savedDelivery.city);
+  set("cPin", savedDelivery.pin);
+  const emailEl = document.getElementById("cEmail");
+  const logged = JSON.parse(localStorage.getItem("ps_user") || "null");
+  if (!emailEl.value && logged && logged.email) emailEl.value = logged.email;
+  localStorage.removeItem("ps_delivery");
+}
 
 // ---------- Order Data (synced from the cart page) ----------
 const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -285,7 +338,7 @@ function methodLabel() {
 function makeOrderId() {
   const d = new Date();
   const p = n => String(n).padStart(2, "0");
-  return "GD" + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" +
+  return "PS" + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + "-" +
     Math.random().toString(36).slice(2, 7).toUpperCase();
 }
 
@@ -297,11 +350,11 @@ function buildInvoice(order) {
     <tr><td>${i + 1}</td><td>${it.name}</td><td class="a">${it.qty}</td><td class="a">${INR(it.price)}</td><td class="a">${INR(it.price * it.qty)}</td></tr>`).join("");
   return `
     <div class="inv-head">
-      <h2>PURNASATVA <span style="color:#b88a44">DAIRY</span></h2>
+      <h2>PURNASATWA <span style="color:#b88a44">DAIRY</span></h2>
       <div class="inv-company">
         <b>Bill / Tax Invoice</b><br>
         Anand, Gujarat, India<br>
-        +91 9876543210 | info@PURNASATVA.com<br>
+        +91 9876543210 | info@PURNASATWA.com<br>
         GSTIN : 24AAAAA0000A1Z5
       </div>
     </div>
@@ -330,7 +383,7 @@ function buildInvoice(order) {
     <div class="inv-pay"><b>Amount in Words :</b> ${amountInWords(order.total)}</div>
     <div class="inv-pay" style="margin-top:8px"><b>Payment Method :</b> ${order.method} &nbsp;|&nbsp; <b>Order ID :</b> ${order.id} &nbsp;|&nbsp; <b>Status :</b> CONFIRMED ✓</div>
     <div class="inv-foot">
-      <b>Thank you for shopping with PURNASATVA!</b><br>
+      <b>Thank you for shopping with PURNASATWA!</b><br>
       This is a computer generated invoice and does not require a physical signature.<br>
       For queries call +91 9876543210
     </div>
@@ -373,9 +426,11 @@ document.getElementById("payNowBtn").addEventListener("click", function () {
     document.getElementById("invoiceBody").innerHTML = buildInvoice(order);
     document.getElementById("successOverlay").classList.add("show");
 
-    const orders = JSON.parse(localStorage.getItem("gd_orders") || "[]");
-    orders.unshift({ ...order, date: order.date.toISOString(), eta: etaStr });
-    localStorage.setItem("gd_orders", JSON.stringify(orders));
+    const legacy = JSON.parse(localStorage.getItem("gd_orders") || "[]");
+    const orders = JSON.parse(localStorage.getItem("ps_orders") || "[]");
+    orders.unshift({ ...order, date: order.date.toISOString(), eta: etaStr, status: "Pending" });
+    localStorage.setItem("ps_orders", JSON.stringify(orders));
+    if (legacy.length) localStorage.removeItem("gd_orders");
 
     localStorage.removeItem("cart");
     updateCartCount();
@@ -462,6 +517,50 @@ if (loginForm) {
     return false;
   });
 }
+
+// ============================================================
+// PRODUCT CATALOG - seeded from localStorage (managed by Admin)
+// ============================================================
+
+const DEFAULT_PRODUCTS = [
+  { name: "Cow Ghee", price: 899, image: "img/ghe  about.png", desc: "100% Pure Bilona Method Ghee." },
+  { name: "Buffalo Ghee", price: 799, image: "img/buffelo.png", desc: "Traditional Homemade Taste." },
+  { name: "Organic Ghee", price: 999, image: "img/gheeeeeeee.png", desc: "Fresh & Healthy Everyday." },
+  { name: "Fresh Cow Milk", price: 80, image: "img/milk.png", desc: "Farm Fresh Everyday.", unit: "/Litre" },
+  { name: "Fresh Curd", price: 120, image: "img/curd.png", desc: "Healthy Homemade Curd." },
+  { name: "Fresh Paneer", price: 350, image: "img/paneer.png", desc: "Soft & Pure Paneer.", unit: "/kg" },
+  { name: "White Butter", price: 450, image: "img/butter.png", desc: "Traditional Makhan." },
+  { name: "Sweet Lassi", price: 60, image: "img/lasiii.png", desc: "Refreshing & Natural." }
+];
+
+function getProducts() {
+  const stored = localStorage.getItem("ps_products");
+  if (stored) {
+    try { return JSON.parse(stored); } catch (e) { /* fall through */ }
+  }
+  localStorage.setItem("ps_products", JSON.stringify(DEFAULT_PRODUCTS));
+  return DEFAULT_PRODUCTS.slice();
+}
+
+function renderProducts() {
+  const container = document.getElementById("productContainer");
+  if (!container) return;
+  const products = getProducts();
+  container.innerHTML = products.map((p, i) => `
+    <div class="product-card">
+      <img src="${p.image}" alt="${p.name}">
+      <div class="product-content">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <h4 class="price">₹${p.price}${p.unit ? p.unit : ""}</h4>
+        <button class="buy-btn add-cart" data-name="${p.name}" data-price="${p.price}" data-image="${p.image}">
+          Add to Cart
+        </button>
+      </div>
+    </div>`).join("");
+}
+
+renderProducts();
 
 // ============================================================
 // CART SYSTEM - Add To Cart + Cart Count Badge
@@ -617,3 +716,112 @@ function updateTotal() {
 }
 
 displayCart();
+
+// ============================================================
+// REVIEWS SECTION - star rating + localStorage (added by opencode)
+// ============================================================
+
+const reviewForm = document.getElementById("reviewForm");
+
+if (reviewForm) {
+
+  const stars = document.querySelectorAll("#reviewStars i");
+  const ratingInput = document.getElementById("reviewRating");
+
+  stars.forEach(star => {
+    star.addEventListener("click", () => {
+      const val = Number(star.dataset.val);
+      ratingInput.value = val;
+      stars.forEach(s => {
+        const sv = Number(s.dataset.val);
+        s.className = sv <= val ? "fa-solid fa-star active" : "fa-regular fa-star";
+      });
+    });
+    star.addEventListener("mouseenter", () => {
+      const val = Number(star.dataset.val);
+      stars.forEach(s => {
+        const sv = Number(s.dataset.val);
+        s.className = sv <= val ? "fa-solid fa-star active" : "fa-regular fa-star";
+      });
+    });
+  });
+
+  document.getElementById("reviewStars").addEventListener("mouseleave", () => {
+    const val = Number(ratingInput.value);
+    stars.forEach(s => {
+      const sv = Number(s.dataset.val);
+      s.className = sv <= val ? "fa-solid fa-star active" : "fa-regular fa-star";
+    });
+  });
+
+  function renderStarsHTML(rating) {
+    let html = "";
+    for (let i = 1; i <= 5; i++) {
+      html += i <= rating
+        ? '<i class="fa-solid fa-star active"></i>'
+        : '<i class="fa-regular fa-star"></i>';
+    }
+    return html;
+  }
+
+  function loadReviews() {
+    const list = document.getElementById("reviewList");
+    if (!list) return;
+    const reviews = JSON.parse(localStorage.getItem("ps_reviews") || "[]");
+    if (reviews.length === 0) {
+      list.innerHTML = '<p class="no-reviews">No reviews yet. Be the first to review!</p>';
+    } else {
+      list.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-head">
+            <span class="review-name">${r.name}</span>
+            <span class="review-stars">${renderStarsHTML(r.rating)}</span>
+          </div>
+          <p class="review-text">${r.message}</p>
+          <span class="review-date">${r.date}</span>
+        </div>`).join("");
+    }
+
+    const summary = document.getElementById("reviewSummary");
+    if (summary) {
+      if (reviews.length === 0) {
+        summary.innerHTML = "";
+      } else {
+        const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+        summary.innerHTML = `
+          <div class="review-avg"><span class="avg-num">${avg.toFixed(1)}</span>
+          <span class="avg-stars">${renderStarsHTML(Math.round(avg))}</span>
+          <span class="avg-count">Based on ${reviews.length} review${reviews.length > 1 ? "s" : ""}</span></div>`;
+      }
+    }
+  }
+
+  reviewForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const name = document.getElementById("reviewName").value.trim();
+    const email = document.getElementById("reviewEmail").value.trim();
+    const message = document.getElementById("reviewText").value.trim();
+    const rating = Number(ratingInput.value);
+
+    if (name.length < 2) { alert("Please enter your name"); return; }
+    if (!/^\S+@\S+\.\S+$/.test(email)) { alert("Please enter a valid email"); return; }
+    if (message.length < 5) { alert("Please write a short review"); return; }
+    if (rating < 1) { alert("Please select a star rating"); return; }
+
+    const d = new Date();
+    const p = n => String(n).padStart(2, "0");
+    const dateStr = p(d.getDate()) + "-" + p(d.getMonth() + 1) + "-" + d.getFullYear();
+
+    const reviews = JSON.parse(localStorage.getItem("ps_reviews") || "[]");
+    reviews.unshift({ name, email, rating, message, date: dateStr });
+    localStorage.setItem("ps_reviews", JSON.stringify(reviews));
+
+    alert("Thank you for your review!");
+    reviewForm.reset();
+    ratingInput.value = 0;
+    stars.forEach(s => s.className = "fa-regular fa-star");
+    loadReviews();
+  });
+
+  loadReviews();
+}
