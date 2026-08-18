@@ -825,3 +825,68 @@ if (reviewForm) {
 
   loadReviews();
 }
+
+// ============================================================
+// SUBSCRIPTIONS PAGE - Plan Selection (added by opencode)
+// ============================================================
+
+function selectPlan(plan) {
+  const user = JSON.parse(localStorage.getItem("ps_user") || "null");
+  if (!user) {
+    alert("Please login to subscribe to a plan.");
+    location.href = "login.html";
+    return;
+  }
+
+  const plans = {
+    basic: { name: "Basic Plan", price: 899, items: "1 x Cow Ghee (500g)" },
+    premium: { name: "Premium Plan", price: 1599, items: "1 x Cow Ghee (1kg), Fresh Milk (2L/week)" },
+    family: { name: "Family Plan", price: 2499, items: "2 x Cow Ghee (1kg each), Fresh Milk (5L/week)" }
+  };
+
+  const selected = plans[plan];
+  if (!selected) return;
+
+  if (confirm(`Subscribe to ${selected.name} for ₹${selected.price}/month?\n\nItems: ${selected.items}`)) {
+    const subscriptions = JSON.parse(localStorage.getItem("ps_subscriptions") || "[]");
+    const existing = subscriptions.find(s => s.email === user.email && s.plan === selected.name);
+    if (existing) {
+      alert("You already have this subscription active!");
+      return;
+    }
+    subscriptions.push({
+      email: user.email,
+      plan: selected.name,
+      price: selected.price,
+      items: selected.items,
+      startDate: new Date().toISOString(),
+      status: "Active"
+    });
+    localStorage.setItem("ps_subscriptions", JSON.stringify(subscriptions));
+    alert(`${selected.name} activated successfully!\n\nYou can manage it from your Account Dashboard.`);
+  }
+}
+
+// ============================================================
+// SUBSCRIPTIONS PAGE - FAQ Toggle (added by opencode)
+// ============================================================
+
+function toggleFaq(el) {
+  const item = el.closest(".faq-item");
+  item.classList.toggle("open");
+}
+
+// ============================================================
+// LOGIN PAGE - Logged-in user detection (added by opencode)
+// ============================================================
+
+(function() {
+  const loginBtn = document.querySelector("a.login-btn");
+  if (!loginBtn) return;
+
+  const user = JSON.parse(localStorage.getItem("ps_user") || "null");
+  if (user) {
+    loginBtn.textContent = "Account";
+    loginBtn.href = "account/dashboard.html";
+  }
+})();

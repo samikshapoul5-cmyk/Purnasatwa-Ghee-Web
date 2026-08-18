@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Account | Purnasatwa</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+</head>
+<body>
+
+<div class="top-header">
+    <div class="container">
+        <p>🚚 Free Shipping On Orders Above ₹999</p>
+    </div>
+</div>
+
+<header>
+    <div class="logo">
+        <h2>PURNASATWA</h2>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../about.html">About</a></li>
+            <li><a href="../products.html">Products</a></li>
+            <li><a href="../recipe.html">Recipes</a></li>
+            <li><a href="../subscriptions.html">Subscriptions</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+            <li><a href="../cart.html"><i class="fa-solid fa-cart-shopping"></i></a></li>
+        </ul>
+    </nav>
+    <a href="../login.html" class="login-btn" id="dashLoginBtn">Login</a>
+</header>
+
+<section class="dash-section">
+    <div class="dash-container">
+
+        <div class="dash-sidebar">
+            <div class="dash-user">
+                <i class="fa-solid fa-circle-user"></i>
+                <h3 id="dashUserName">Guest</h3>
+                <p id="dashUserEmail">Login to view your account</p>
+            </div>
+            <ul class="dash-nav">
+                <li class="active" onclick="showDashTab('orders')"><i class="fa-solid fa-receipt"></i> My Orders</li>
+                <li onclick="showDashTab('profile')"><i class="fa-solid fa-user"></i> Profile</li>
+                <li onclick="showDashTab('addresses')"><i class="fa-solid fa-location-dot"></i> Addresses</li>
+                <li onclick="showDashTab('subscriptions')"><i class="fa-solid fa-rotate"></i> Subscriptions</li>
+                <li onclick="dashLogout()"><i class="fa-solid fa-right-from-bracket"></i> Logout</li>
+            </ul>
+        </div>
+
+        <div class="dash-main">
+
+            <div class="dash-panel active" id="dash-orders">
+                <h2><i class="fa-solid fa-receipt"></i> My Orders</h2>
+                <div id="dashOrdersList"></div>
+            </div>
+
+            <div class="dash-panel" id="dash-profile">
+                <h2><i class="fa-solid fa-user"></i> My Profile</h2>
+                <form class="contact-form" id="dashProfileForm">
+                    <input type="text" id="dashPName" placeholder="Full Name">
+                    <input type="email" id="dashPEmail" placeholder="Email Address" readonly>
+                    <input type="tel" id="dashPPhone" placeholder="Phone Number" maxlength="10">
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="dash-panel" id="dash-addresses">
+                <h2><i class="fa-solid fa-location-dot"></i> Saved Addresses</h2>
+                <div id="dashAddressList"></div>
+                <form class="contact-form" id="dashAddressForm" style="margin-top:20px;">
+                    <input type="text" id="dashAName" placeholder="Full Name" required>
+                    <input type="tel" id="dashAPhone" placeholder="Phone Number" maxlength="10" required>
+                    <input type="text" id="dashAAddress" placeholder="House No, Street, Area" required>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+                        <input type="text" id="dashACity" placeholder="City" required>
+                        <input type="text" id="dashAPin" placeholder="PIN Code" maxlength="6" required>
+                    </div>
+                    <button type="submit">Save Address</button>
+                </form>
+            </div>
+
+            <div class="dash-panel" id="dash-subscriptions">
+                <h2><i class="fa-solid fa-rotate"></i> My Subscriptions</h2>
+                <div id="dashSubList">
+                    <p class="no-reviews">No active subscriptions. <a href="../subscriptions.html" style="color:#b88a44;">Browse Plans</a></p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<footer>
+    <div class="footer-content">
+        <div>
+            <h3>Purnasatwa</h3>
+            <p>100% Pure Dairy Products.</p>
+        </div>
+        <div>
+            <h3>Quick Links</h3>
+            <a href="../index.html">Home</a>
+            <a href="../about.html">About</a>
+            <a href="../products.html">Products</a>
+            <a href="../contact.html">Contact</a>
+        </div>
+        <div>
+            <h3>Contact</h3>
+            <p>+91 9876543210</p>
+            <p>info@purnasatwa.com</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>&copy; 2026 Purnasatwa. All Rights Reserved.</p>
+    </div>
+</footer>
+
+<script src="../script.js"></script>
+<script>
+// ===============================
+// DASHBOARD LOGIC
+// ===============================
+
+const loggedUser = JSON.parse(localStorage.getItem("ps_user") || "null");
+
+function checkDashAuth() {
+    if (!loggedUser) {
+        alert("Please login to view your account.");
+        location.href = "../login.html";
+        return false;
+    }
+    return true;
+}
+
+if (checkDashAuth()) {
+    document.getElementById("dashUserName").textContent = loggedUser.name;
+    document.getElementById("dashUserEmail").textContent = loggedUser.email;
+    document.getElementById("dashLoginBtn").textContent = "Account";
+    document.getElementById("dashLoginBtn").href = "dashboard.html";
+
+    document.getElementById("dashPName").value = loggedUser.name || "";
+    document.getElementById("dashPEmail").value = loggedUser.email || "";
+
+    const users = JSON.parse(localStorage.getItem("ps_users") || "[]");
+    const user = users.find(u => u.email === loggedUser.email);
+    if (user) {
+        document.getElementById("dashPPhone").value = user.phone || "";
+    }
+
+    loadDashOrders();
+    loadDashAddresses();
+}
+
+function showDashTab(tab) {
+    document.querySelectorAll(".dash-panel").forEach(p => p.classList.remove("active"));
+    document.querySelectorAll(".dash-nav li").forEach(l => l.classList.remove("active"));
+    document.getElementById("dash-" + tab).classList.add("active");
+    event.currentTarget.classList.add("active");
+}
+
+function dashLogout() {
+    localStorage.removeItem("ps_user");
+    alert("Logged out successfully.");
+    location.href = "../index.html";
+}
+
+function loadDashOrders() {
+    const container = document.getElementById("dashOrdersList");
+    const orders = JSON.parse(localStorage.getItem("ps_orders") || "[]");
+    const userOrders = orders.filter(o => o.email === loggedUser.email);
+
+    if (userOrders.length === 0) {
+        container.innerHTML = '<p class="no-reviews">No orders yet. <a href="../products.html" style="color:#b88a44;">Start Shopping</a></p>';
+        return;
+    }
+
+    container.innerHTML = userOrders.map(o => {
+        const items = (o.items || []).map(it => `${it.name} x${it.qty}`).join(", ");
+        return `
+        <div class="dash-order-card">
+            <div class="dash-order-head">
+                <span><b>Order:</b> ${o.id}</span>
+                <span class="dash-status ${o.status === 'Delivered' ? 'delivered' : ''}">${o.status || 'Pending'}</span>
+            </div>
+            <p><b>Items:</b> ${items}</p>
+            <p><b>Total:</b> ₹${(o.total || 0).toLocaleString("en-IN")} | <b>Payment:</b> ${o.method || '-'}</p>
+            <p><b>Date:</b> ${o.date ? new Date(o.date).toLocaleDateString("en-IN") : '-'} | <b>ETA:</b> ${o.eta || '-'}</p>
+        </div>`;
+    }).join("");
+}
+
+function loadDashAddresses() {
+    const container = document.getElementById("dashAddressList");
+    const addresses = JSON.parse(localStorage.getItem("ps_addresses") || "[]");
+    const userAddr = addresses.filter(a => a.email === loggedUser.email);
+
+    if (userAddr.length === 0) {
+        container.innerHTML = '<p class="no-reviews">No saved addresses yet.</p>';
+        return;
+    }
+
+    container.innerHTML = userAddr.map((a, i) => `
+        <div class="dash-order-card">
+            <p><b>${a.name}</b> | ${a.phone}</p>
+            <p>${a.address}, ${a.city} - ${a.pin}</p>
+            <button class="admin-del" onclick="deleteAddress(${i})" style="margin-top:8px;">Remove</button>
+        </div>`).join("");
+}
+
+document.getElementById("dashProfileForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const name = document.getElementById("dashPName").value.trim();
+    const phone = document.getElementById("dashPPhone").value.trim();
+    if (name.length < 3) { alert("Please enter your name"); return; }
+
+    loggedUser.name = name;
+    localStorage.setItem("ps_user", JSON.stringify(loggedUser));
+    document.getElementById("dashUserName").textContent = name;
+
+    const users = JSON.parse(localStorage.getItem("ps_users") || "[]");
+    const idx = users.findIndex(u => u.email === loggedUser.email);
+    if (idx !== -1) {
+        users[idx].name = name;
+        users[idx].phone = phone;
+        localStorage.setItem("ps_users", JSON.stringify(users));
+    }
+    alert("Profile updated!");
+});
+
+document.getElementById("dashAddressForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const addr = {
+        name: document.getElementById("dashAName").value.trim(),
+        phone: document.getElementById("dashAPhone").value.trim(),
+        address: document.getElementById("dashAAddress").value.trim(),
+        city: document.getElementById("dashACity").value.trim(),
+        pin: document.getElementById("dashAPin").value.trim(),
+        email: loggedUser.email
+    };
+    if (addr.pin.length !== 6) { alert("Enter valid PIN code"); return; }
+    const addresses = JSON.parse(localStorage.getItem("ps_addresses") || "[]");
+    addresses.push(addr);
+    localStorage.setItem("ps_addresses", JSON.stringify(addresses));
+    this.reset();
+    loadDashAddresses();
+    alert("Address saved!");
+});
+
+function deleteAddress(idx) {
+    const addresses = JSON.parse(localStorage.getItem("ps_addresses") || "[]");
+    const userAddr = addresses.filter(a => a.email === loggedUser.email);
+    const allOthers = addresses.filter(a => a.email !== loggedUser.email);
+    userAddr.splice(idx, 1);
+    localStorage.setItem("ps_addresses", JSON.stringify([...allOthers, ...userAddr]));
+    loadDashAddresses();
+}
+</script>
+</body>
+</html>
