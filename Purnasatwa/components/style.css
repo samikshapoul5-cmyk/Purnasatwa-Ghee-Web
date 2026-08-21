@@ -1335,26 +1335,25 @@ header{
     top: 0;
     z-index: 999;
     width: 100%;
-    padding: 18px 7%;
+    padding: 14px 4%;
     display: flex;
     justify-content: space-between;
     align-items: center;
-
+    gap: 15px;
     background: #ffffff;
-
     border-bottom: 3px solid #b88a44;
-
     box-shadow: 0 12px 30px rgba(0,0,0,.08);
 }
 
 /* LOGO */
 
 .logo h2{
-    font-size: 38px;
+    font-size: 28px;
     font-weight: 800;
     color: #124734;
     letter-spacing: 2px;
     transition: .3s;
+    white-space:nowrap;
 }
 
 .logo h2:hover{
@@ -1363,22 +1362,27 @@ header{
 
 /* NAV */
 
+nav{
+    flex:1;
+    display:flex;
+    justify-content:center;
+}
+
 nav ul{
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 6px;
+    flex-wrap:nowrap;
 }
 
 nav ul li a{
     color: #333;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
-
-    padding: 12px 22px;
-
+    padding: 8px 14px;
     border-radius: 50px;
-
     transition: .35s;
+    white-space:nowrap;
 }
 
 nav ul li a:hover,
@@ -1400,21 +1404,23 @@ nav ul li a::after{
 /* LOGIN BUTTON */
 
 .login-btn{
-
     background: linear-gradient(135deg,#b88a44,#e3b458);
-
     color: white;
-
-    padding: 14px 34px;
-
+    padding: 10px 22px;
     border-radius: 50px;
-
     font-weight: 700;
-
     transition: .35s;
-
     box-shadow: 0 12px 30px rgba(184,138,68,.35);
+    display:flex;
+    align-items:center;
+    gap:6px;
+    white-space:nowrap;
+    font-size:14px;
+    flex-shrink:0;
+}
 
+.login-btn i{
+    font-size:16px;
 }
 
 .login-btn:hover{
@@ -1430,6 +1436,8 @@ nav ul li a::after{
 .fa-cart-shopping{
 
     font-size:20px;
+    color:#333;
+    position:relative;
 
 }
 nav ul li a{
@@ -2204,6 +2212,75 @@ nav ul li a:hover{
    RECIPE PAGE (added by opencode)
 =========================================== */
 
+.hero-bg{
+  position:relative;
+  width:100%;
+  height:70vh;
+  min-height:400px;
+  overflow:hidden;
+}
+
+.hero-bg-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.hero-bg-overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,.35);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:20px;
+}
+
+.hero-bg-overlay h1{
+  color:#fff;
+  font-size:52px;
+  font-weight:800;
+  letter-spacing:4px;
+  text-shadow:0 4px 20px rgba(0,0,0,.5);
+  margin-bottom:15px;
+}
+
+.hero-bg-overlay p{
+  color:#f0f0f0;
+  font-size:18px;
+  max-width:600px;
+  margin-bottom:30px;
+  text-shadow:0 2px 10px rgba(0,0,0,.4);
+  line-height:1.6;
+}
+
+.hero-bg-img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  animation:heroZoom 8s ease-in-out infinite alternate;
+}
+
+@keyframes heroZoom{
+  0%{transform:scale(1);}
+  100%{transform:scale(1.08);}
+}
+
+@media(max-width:992px){
+  .hero-bg{height:50vh;min-height:300px;}
+  .hero-bg-overlay h1{font-size:32px;letter-spacing:2px;}
+  .hero-bg-overlay p{font-size:15px;}
+}
+
+@media(max-width:768px){
+  .hero-bg{height:45vh;min-height:280px;}
+  .hero-bg-overlay h1{font-size:24px;letter-spacing:1px;}
+  .hero-bg-overlay p{font-size:13px;}
+  .hero-bg-overlay .hero-btn{flex-direction:column;gap:10px;}
+}
+
 .recipe-section{
   width:90%;
   max-width:1250px;
@@ -2359,260 +2436,6 @@ nav ul li a:hover{
 
 @media(max-width:600px){
   .recipe-grid{grid-template-columns:1fr;}
-}
-
-/* ===========================================
-   SUBSCRIPTIONS PAGE (added by opencode)
-=========================================== */
-
-.sub-plans{
-  width:90%;
-  max-width:1200px;
-  margin:20px auto 80px;
-}
-
-.sub-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:30px;
-  align-items:start;
-}
-
-.sub-card{
-  background:#fff;
-  border-radius:18px;
-  padding:35px 28px;
-  text-align:center;
-  border:2px solid #ececec;
-  position:relative;
-  transition:.35s;
-}
-
-.sub-card:hover{
-  transform:translateY(-10px);
-  box-shadow:0 20px 50px rgba(0,0,0,.1);
-}
-
-.sub-card.featured{
-  border-color:#b88a44;
-  transform:scale(1.05);
-  box-shadow:0 15px 40px rgba(184,138,68,.2);
-}
-
-.sub-card.featured:hover{
-  transform:scale(1.05) translateY(-5px);
-}
-
-.sub-badge{
-  position:absolute;
-  top:-12px;
-  left:50%;
-  transform:translateX(-50%);
-  background:#124734;
-  color:#fff;
-  padding:5px 20px;
-  border-radius:20px;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:1px;
-  text-transform:uppercase;
-}
-
-.sub-badge.gold{
-  background:linear-gradient(135deg,#b88a44,#d8a84f);
-}
-
-.sub-icon{
-  margin:15px 0;
-}
-
-.sub-icon i{
-  font-size:42px;
-  color:#b88a44;
-}
-
-.sub-card h3{
-  color:#124734;
-  font-size:24px;
-  margin-bottom:10px;
-}
-
-.sub-price{
-  font-size:38px;
-  font-weight:800;
-  color:#124734;
-  margin-bottom:25px;
-}
-
-.sub-price span{
-  font-size:16px;
-  font-weight:500;
-  color:#888;
-}
-
-.sub-features{
-  list-style:none;
-  text-align:left;
-  margin-bottom:30px;
-}
-
-.sub-features li{
-  padding:10px 0;
-  border-bottom:1px solid #f0f0f0;
-  font-size:15px;
-  color:#444;
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.sub-features li i{
-  font-size:14px;
-  width:20px;
-  text-align:center;
-}
-
-.sub-features li .fa-check{
-  color:#124734;
-}
-
-.sub-features li .fa-xmark{
-  color:#ccc;
-}
-
-.sub-features li.disabled{
-  color:#bbb;
-}
-
-.sub-btn{
-  width:100%;
-  padding:14px;
-  font-size:16px;
-}
-
-/* How It Works */
-.sub-how{
-  background:#f8f9fa;
-  padding:70px 0;
-}
-
-.sub-how h2{
-  text-align:center;
-  color:#124734;
-  font-size:32px;
-  margin-bottom:40px;
-}
-
-.how-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:30px;
-  max-width:1000px;
-  margin:0 auto;
-}
-
-.how-step{
-  text-align:center;
-  padding:30px;
-}
-
-.step-num{
-  width:60px;
-  height:60px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#124734,#1d6b4b);
-  color:#fff;
-  font-size:24px;
-  font-weight:800;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  margin:0 auto 18px;
-}
-
-.how-step h3{
-  color:#124734;
-  font-size:20px;
-  margin-bottom:10px;
-}
-
-.how-step p{
-  color:#666;
-  font-size:14px;
-  line-height:1.7;
-}
-
-/* FAQ */
-.sub-faq{
-  padding:70px 0;
-}
-
-.sub-faq h2{
-  text-align:center;
-  color:#124734;
-  font-size:32px;
-  margin-bottom:40px;
-}
-
-.faq-list{
-  max-width:800px;
-  margin:0 auto;
-}
-
-.faq-item{
-  border:1px solid #ececec;
-  border-radius:12px;
-  margin-bottom:12px;
-  overflow:hidden;
-  background:#fff;
-}
-
-.faq-q{
-  padding:18px 22px;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-weight:600;
-  color:#124734;
-  transition:.3s;
-}
-
-.faq-q:hover{
-  background:#f8f9fa;
-}
-
-.faq-q i{
-  transition:.3s;
-  color:#b88a44;
-}
-
-.faq-a{
-  max-height:0;
-  overflow:hidden;
-  transition:.3s;
-}
-
-.faq-a p{
-  padding:0 22px 18px;
-  color:#666;
-  font-size:14px;
-  line-height:1.7;
-}
-
-.faq-item.open .faq-a{
-  max-height:200px;
-}
-
-.faq-item.open .faq-q i{
-  transform:rotate(180deg);
-}
-
-@media(max-width:900px){
-  .sub-grid{grid-template-columns:1fr;max-width:420px;margin-left:auto;margin-right:auto;}
-  .sub-card.featured{transform:none;}
-  .sub-card.featured:hover{transform:translateY(-10px);}
-  .how-grid{grid-template-columns:1fr;}
 }
 
 /* ===========================================
